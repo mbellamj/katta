@@ -1,0 +1,12 @@
+{
+  "transform": {
+    "^.+\\.(t|j)sx?$": "ts-jest"
+  },
+  "testEnvironment": "node",
+  "moduleFileExtensions": ["ts", "js", "json"],
+  "testRegex": ".*\\.(spec|test)\\.(js|ts)$",
+  "collectCoverage": true,
+  "coverageDirectory": "./coverage",
+  "coverageReporters": ["text", "cobertura", "lcov"],
+  "collectCoverageFrom": ["**/*.(t|j)s"]
+}
