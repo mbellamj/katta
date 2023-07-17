@@ -1,11 +1,11 @@
 import { IBasketItem, IBook } from "./types";
 
 /**
- * @method calculateBasketPrice This method take a basket, an item unit price,
- * the discounts rules, apply the best discount, and indicator  and calculate the total cost of the basket
+ * @method calculateBasketPrice This method take a basket, the discounts rules, an indicator,
+ * apply the best discount and calculate the total cost of the basket
  * @param basket
  * @param discounts
- * @param indicator this represent the pricing model vector which indicate what should be the best discount default value 4
+ * @param indicator this represent the pricing model vector which indicate what should be the best discount
  * @returns the total cost of the basket
  */
 export function calculateBasketPrice(
