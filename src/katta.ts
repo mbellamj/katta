@@ -1,38 +1,44 @@
-import { IBasketItem, IBook } from "./types";
+import {
+  IBasketItem,
+  IBasketPriceCalculator,
+  IBook,
+  IDiscountCalculator,
+} from "./types";
 
-/**
- * @method calculateBasketPrice This method take a basket, the discounts rules, an indicator,
- * apply the best discount and calculate the total cost of the basket
- * @param basket
- * @param discounts
- * @param indicator this represent the pricing model vector which indicate what should be the best discount
- * @returns the total cost of the basket
- */
-export function calculateBasketPrice(
-  basket: IBasketItem<IBook>[],
-  discounts: Record<number, number>,
-  indicator: number
-): number {
-  let basketPrice = 0,
-    i = 0;
-  // We make a copy of the basket ensuring that we shouldn't have reference issue using property basket later
-  let basketClone = Array.from(basket);
+export class DiscountCalculator implements IDiscountCalculator {
+  constructor(private readonly discount: number) {}
 
-  const discount = discounts[indicator];
-
-  while (i <= indicator && basketClone.length >= indicator) {
-    // We filter books using the predicate quantity is greater than 0
-    basketClone = basketClone.filter((book) => book.quantity > 0);
-
-    // We apply the discount to the book set price and add it to the total cost
-    basketPrice += indicator * basketClone[i].item.price * (1 - discount);
-
-    // We reduce the quantities of books in the basket for the current set
-    basketClone = basketClone.map((book) => ({
-      ...book,
-      quantity: Math.max(book.quantity - 1, 0),
-    }));
+  /**
+   * @method calculateDiscountedPrice This method take the item price and its quantity then calculate the discounted price
+   * @param price the item price
+   * @param quantity the quantity
+   * @returns the discounted price
+   */
+  public calculateDiscountedPrice(price: number, quantity: number): number {
+    return price * quantity * (1 - this.discount);
   }
+}
 
-  return basketPrice;
+export class BasketPriceCalculator implements IBasketPriceCalculator {
+  constructor(private readonly discountCalculator: IDiscountCalculator) {}
+
+  /**
+   * @method calculateBasketPrice This method take a basket and calculate the total cost of the basket
+   * @param basket an array of basket items
+   * @returns the total cost of the basket
+   */
+  public calculateBasketPrice(basket: IBasketItem<IBook>[]): number {
+    let basketPrice = 0;
+
+    for (const basketItem of basket) {
+      const { item, quantity } = basketItem;
+      const discountedPrice = this.discountCalculator.calculateDiscountedPrice(
+        item.price,
+        quantity
+      );
+      basketPrice += discountedPrice;
+    }
+
+    return Math.round(basketPrice * 100) / 100;
+  }
 }
