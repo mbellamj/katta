@@ -1,8 +1,4 @@
-import {
-  BasketPriceCalculator,
-  DiscountCalculator,
-  calculateBasketPrice,
-} from "./katta";
+import { BasketPriceCalculator, DiscountCalculator } from "./katta";
 import {
   IBasketItem,
   IBasketPriceCalculator,

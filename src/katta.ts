@@ -30,8 +30,7 @@ export class BasketPriceCalculator implements IBasketPriceCalculator {
   public calculateBasketPrice(basket: IBasketItem<IBook>[]): number {
     let basketPrice = 0;
 
-    for (const basketItem of basket) {
-      const { item, quantity } = basketItem;
+    for (const { item, quantity } of basket) {
       const discountedPrice = this.discountCalculator.calculateDiscountedPrice(
         item.price,
         quantity
